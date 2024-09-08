@@ -31,6 +31,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/client")
 @Tag(name = "Client")
+@CrossOrigin(origins = "http://127.0.0.1:5500") // Substitua pelo URL do seu frontend
 public class ClientController {
     
     @Autowired

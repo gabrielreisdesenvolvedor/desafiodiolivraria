@@ -23,6 +23,9 @@ public class ClientService {
     
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    EmailService emailService;
     
     Scanner scanner = new Scanner(System.in);
     
@@ -31,7 +34,13 @@ public class ClientService {
 
         ClientModel model = new ClientModel(clientDto);
         var modelCreate = this.clientRepository.save(model);
-        
+
+        emailService.sendSimpleEmail(
+        clientDto.getEmail(),
+        "Bem vindo a nossa livraria",
+        "Você agora faz parte da nossa livraria."
+        );
+
         return new ClientDto(modelCreate);
     }
     

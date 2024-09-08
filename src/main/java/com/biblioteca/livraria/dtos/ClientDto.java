@@ -3,22 +3,27 @@ package com.biblioteca.livraria.dtos;
 import com.biblioteca.livraria.models.ClientModel;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.lang.NonNull;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 public class ClientDto {
 
     private UUID id;
-    @NotBlank
+
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
-    @NotBlank
-    @Email
+
+    @NotBlank(message = "O e-mail é obrigatório")
+    @Email(message = "O e-mail deve ser um formato válido")
     private String email;
-    @NotBlank
+
+    @NotBlank(message = "O endereço é obrigatório")
     private String address;
-    @NonNull
+
+    @NotNull(message = "O saldo da conta não pode ser nulo")
     private Double accountBalance;
+
 
     public ClientDto(){}
 
