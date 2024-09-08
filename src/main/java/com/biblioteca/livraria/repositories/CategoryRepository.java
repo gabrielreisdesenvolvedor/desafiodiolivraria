@@ -4,7 +4,7 @@
  */
 package com.biblioteca.livraria.repositories;
 
-import com.biblioteca.livraria.models.ClienteModel;
+import com.biblioteca.livraria.models.CategoryModel;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
  * @author gabriel
  */
 @Repository
-public interface ClienteRepository extends JpaRepository<ClienteModel, UUID>{
+public interface CategoryRepository extends JpaRepository<CategoryModel, UUID>{
     
+    CategoryModel findByName(String nome);
 }

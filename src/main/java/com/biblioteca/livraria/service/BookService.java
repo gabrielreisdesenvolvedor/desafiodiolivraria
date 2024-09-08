@@ -4,10 +4,10 @@
  */
 package com.biblioteca.livraria.service;
 
-import com.biblioteca.livraria.models.CategoriasModel;
-import com.biblioteca.livraria.models.LivrosModel;
-import com.biblioteca.livraria.repositories.CategoriasRepository;
-import com.biblioteca.livraria.repositories.LivrosRepository;
+import com.biblioteca.livraria.models.CategoryModel;
+import com.biblioteca.livraria.models.BookModel;
+import com.biblioteca.livraria.repositories.CategoryRepository;
+import com.biblioteca.livraria.repositories.BookRepository;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Service;
  * @author gabriel
  */
 @Service
-public class LivrosService {
+public class BookService {
     
     @Autowired
-    LivrosRepository livrosRepository;
+    BookRepository bookRepository;
     
     @Autowired
-    CategoriasRepository categoriasRepository;
+    CategoryRepository categoryRepository;
     
     Scanner scanner = new Scanner(System.in);
     
@@ -42,28 +42,28 @@ public class LivrosService {
         int escolhaCategoria = scanner.nextInt();
         scanner.nextLine();
         
-        CategoriasModel categoria = null;
+        CategoryModel categoria = null;
         
         switch(escolhaCategoria){
             case 1: 
-                categoria = this.categoriasRepository.findByNome("Terror");
+                categoria = this.categoryRepository.findByName("Terror");
                 break;
             case 2: 
-                categoria = this.categoriasRepository.findByNome("Comedia");
+                categoria = this.categoryRepository.findByName("Comedia");
                 break;
            case 3:
-                categoria = this.categoriasRepository.findByNome("Acao");
+                categoria = this.categoryRepository.findByName("Acao");
                 break;
            default:
                System.out.println("Digite o nome da categoria nova: ");
                String nomeCategoriaNova = scanner.nextLine();
-               categoria = new CategoriasModel(nomeCategoriaNova);
-               this.categoriasRepository.save(categoria);
+               categoria = new CategoryModel(nomeCategoriaNova);
+               this.categoryRepository.save(categoria);
                break;
     }
         
-        LivrosModel livro = new LivrosModel(nomeLivro, nomeAutor, descricao, categoria);
-        this.livrosRepository.save(livro);
+        BookModel livro = new BookModel(nomeLivro, nomeAutor, descricao, categoria);
+        this.bookRepository.save(livro);
         
         return true;
 }
