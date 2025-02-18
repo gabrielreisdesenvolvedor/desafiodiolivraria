@@ -1,28 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.biblioteca.livraria.models;
+package com.biblioteca.livraria.dtos;
 
-import com.biblioteca.livraria.dtos.BookDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.biblioteca.livraria.models.BookModel;
+import com.biblioteca.livraria.models.CategoryModel;
+import com.biblioteca.livraria.models.ClientModel;
+
 import java.util.UUID;
 
-/**
- *
- * @author gabriel
- */
-@Entity
-@Table(name = "tb_livros")
-public class BookModel {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class BookDto {
+
     private UUID id;
 
     private String name;
@@ -31,27 +16,25 @@ public class BookModel {
 
     private String description;
 
-    @ManyToOne
     private CategoryModel category;
 
-    @ManyToOne
     private ClientModel client;
-    
-    public BookModel(){}
 
-    public BookModel(String name, String author, String description, CategoryModel category) {
+    public BookDto() {}
+
+    public BookDto(String name, String author, String description){
         this.name = name;
         this.author = author;
         this.description = description;
-        this.category = category;
     }
 
-    public BookModel(BookDto bookDto){
-        this.name = bookDto.getName();
-        this.author = bookDto.getAuthor();
-        this.description = bookDto.getDescription();
-        this.category = bookDto.getCategory();
-        this.client = bookDto.getClient();
+    public BookDto(BookModel bookModel){
+        this.id = bookModel.getId();
+        this.name = bookModel.getName();
+        this.author = bookModel.getAuthor();
+        this.description = bookModel.getDescription();
+        this.category = bookModel.getCategory();
+        this.client = bookModel.getClient();
     }
 
     public UUID getId() {

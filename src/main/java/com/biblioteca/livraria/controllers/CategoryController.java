@@ -8,6 +8,7 @@ import com.biblioteca.livraria.dtos.CategoryDto;
 import com.biblioteca.livraria.service.CategoryService;
 import com.biblioteca.livraria.models.CategoryModel;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,6 @@ import java.net.URI;
  */
 @RestController
 @RequestMapping("/category")
-@Tag(name = "Category")
 public class CategoryController {
     
     @Autowired
@@ -41,15 +41,15 @@ public class CategoryController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
 
-        Page<CategoryDto> categoryDto = this.service.findAll(pageable);
+        Page<CategoryDto> categoryDto = this.service.findAll(page, size, sort);
 
         return ResponseEntity.ok(categoryDto);
     }
     
     @PostMapping
-    public ResponseEntity<CategoryDto> addCategory(CategoryDto category){
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody @Valid CategoryDto category){
         CategoryDto categoryDto = this.service.addCategory(category);
         URI locale = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoryDto.getId()).toUri();
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryDto);
+        return ResponseEntity.created(locale).body(categoryDto);
     }
 }

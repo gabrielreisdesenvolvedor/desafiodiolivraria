@@ -11,19 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class LivrariaApplication{
-
-        @Autowired
-        CategoryService categoryService;
-    
-        @Autowired
-        BookService bookService;
-        
-        @Autowired
-        ClientService clientService;
     
 	public static void main(String[] args) {
 		SpringApplication.run(LivrariaApplication.class, args);
-      
-       
 	}
 }

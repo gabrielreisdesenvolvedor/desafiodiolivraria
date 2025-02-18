@@ -1,16 +1,16 @@
 package com.biblioteca.livraria.configuration;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/client/**")
-                .allowedOrigins("http://127.0.0.1:5500") // Ajuste para a URL do seu frontend
+                .allowedOrigins("http://127.0.0.1:5500") // Ajustar para URL que for usada no Frontend.
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }

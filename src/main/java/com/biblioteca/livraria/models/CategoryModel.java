@@ -21,8 +21,10 @@ public class CategoryModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
     @Column(name = "nome")
     private String name;
+
     @OneToMany(mappedBy = "category")
     private List<BookModel> books;
     

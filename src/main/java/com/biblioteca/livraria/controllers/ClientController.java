@@ -30,18 +30,12 @@ import java.net.URI;
  */
 @RestController
 @RequestMapping("/client")
-@Tag(name = "Client")
 @CrossOrigin(origins = "http://127.0.0.1:5500") // Substitua pelo URL do seu frontend
 public class ClientController {
     
     @Autowired
     ClientService clientService;
 
-    @Operation(summary = "Criar um novo cliente", description = "Cria um novo cliente com os detalhes fornecidos.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso."),
-            @ApiResponse(responseCode = "400", description = "Entrada inválida.")
-    })
     @PostMapping
     public ResponseEntity<ClientDto> create(@Valid @RequestBody ClientDto clientDto) {
         ClientDto clientCreate = this.clientService.addClient(clientDto);
@@ -52,18 +46,13 @@ public class ClientController {
         return ResponseEntity.created(location).body(clientCreate);
     }
 
-    @Operation(summary = "Obter todos os clientes", description = "Obtém uma lista paginada de todos os clientes com ordenação opcional.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de clientes obtida com sucesso.")
-    })
     @GetMapping
     public ResponseEntity<Page<ClientDto>> findAll(
-            @RequestParam(defaultValue = "0") @Parameter(description = "Número da página a ser obtida") @Min(0) int page,
-            @RequestParam(defaultValue = "10") @Parameter(description = "Número de itens por página") @Min(1) int size,
-            @RequestParam(defaultValue = "name") @Parameter(description = "Campo para ordenar a lista") String sort) {
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) int size,
+            @RequestParam(defaultValue = "name") String sort) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        Page<ClientDto> clients = this.clientService.findAll(pageable);
+        Page<ClientDto> clients = this.clientService.findAll(page, size, sort);
         return ResponseEntity.ok(clients);
     }
 }
