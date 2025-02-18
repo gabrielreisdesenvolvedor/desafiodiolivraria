@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.biblioteca.livraria.service;
 
 import com.biblioteca.livraria.dtos.CategoryDto;
@@ -12,8 +8,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  *
@@ -37,5 +37,33 @@ public class CategoryService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         Page<CategoryModel> categoryModel = this.categoryRepository.findAll(pageable);
         return categoryModel.map(CategoryDto::new);
+    }
+
+    @Transactional
+    public CategoryDto findById(UUID id){
+        CategoryModel categoryModel = this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category Not Found."));
+        return new CategoryDto(categoryModel);
+    }
+
+    @Transactional
+    public String updateCategory(UUID id, CategoryDto categoryDto){
+        CategoryModel categoryModel = this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category Not Found."));
+        categoryModel.setName(categoryDto.getName());
+        this.categoryRepository.save(categoryModel);
+        return "Category update with success.";
+    }
+
+    @Transactional
+    public String deleteCategory(UUID id){
+        CategoryModel categoryModel = this.categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category Not Found."));
+         this.categoryRepository.deleteById(categoryModel.getId());
+        return "Category delete with success.";
+    }
+
+    @Transactional
+    public String deleteCategory(String name){
+        CategoryModel categoryModel = this.categoryRepository.findByName(name).orElseThrow(() -> new RuntimeException("Category Not Found."));
+        this.categoryRepository.deleteById(categoryModel.getId());
+        return "Category delete with success.";
     }
 }

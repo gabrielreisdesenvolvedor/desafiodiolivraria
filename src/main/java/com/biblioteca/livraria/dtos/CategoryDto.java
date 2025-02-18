@@ -23,10 +23,6 @@ public class CategoryDto {
         return id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public @NotBlank String getName() {
         return name;
     }

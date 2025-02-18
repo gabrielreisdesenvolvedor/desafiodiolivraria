@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 /**
  *
@@ -31,7 +32,14 @@ import java.net.URI;
 public class CategoryController {
     
     @Autowired
-    CategoryService service;
+    CategoryService categoryService;
+
+    @PostMapping
+    public ResponseEntity<CategoryDto> create(@RequestBody @Valid CategoryDto category){
+        CategoryDto categoryDto = this.categoryService.addCategory(category);
+        URI locale = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoryDto.getId()).toUri();
+        return ResponseEntity.created(locale).body(categoryDto);
+    }
 
     @GetMapping
     public ResponseEntity<Page<CategoryDto>> findAll(
@@ -41,15 +49,33 @@ public class CategoryController {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
 
-        Page<CategoryDto> categoryDto = this.service.findAll(page, size, sort);
+        Page<CategoryDto> categoryDto = this.categoryService.findAll(page, size, sort);
 
         return ResponseEntity.ok(categoryDto);
     }
-    
-    @PostMapping
-    public ResponseEntity<CategoryDto> addCategory(@RequestBody @Valid CategoryDto category){
-        CategoryDto categoryDto = this.service.addCategory(category);
-        URI locale = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(categoryDto.getId()).toUri();
-        return ResponseEntity.created(locale).body(categoryDto);
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> findById(@PathVariable("id") UUID id){
+         CategoryDto categoryDto = this.categoryService.findById(id);
+         return ResponseEntity.ok(categoryDto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateCategory(@PathVariable("id") UUID id, @RequestBody @Valid CategoryDto categoryDto){
+        String update = this.categoryService.updateCategory(id, categoryDto);
+        return ResponseEntity.ok(update);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") UUID id){
+        String delete = this.categoryService.deleteCategory(id);
+        return ResponseEntity.ok(delete);
+    }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<String> deleteCategory(@PathVariable("name") String name){
+        String delete = this.categoryService.deleteCategory(name);
+        return ResponseEntity.ok(delete);
+    }
+
 }

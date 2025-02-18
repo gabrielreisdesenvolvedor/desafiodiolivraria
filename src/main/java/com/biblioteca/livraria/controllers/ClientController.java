@@ -4,6 +4,7 @@
  */
 package com.biblioteca.livraria.controllers;
 
+import com.biblioteca.livraria.dtos.BookDto;
 import com.biblioteca.livraria.dtos.ClientDto;
 import com.biblioteca.livraria.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 /**
  *
@@ -38,7 +40,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientDto> create(@Valid @RequestBody ClientDto clientDto) {
-        ClientDto clientCreate = this.clientService.addClient(clientDto);
+        ClientDto clientCreate = this.clientService.create(clientDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(clientCreate.getId())
@@ -54,5 +56,29 @@ public class ClientController {
 
         Page<ClientDto> clients = this.clientService.findAll(page, size, sort);
         return ResponseEntity.ok(clients);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDto> findById(UUID id){
+        ClientDto clientDto = this.clientService.findById(id);
+        return ResponseEntity.ok(clientDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateClient (@PathVariable("id") UUID id, @RequestBody @Valid ClientDto clientDto){
+        String update = this.clientService.updateClient(id, clientDto);
+        return ResponseEntity.ok(update);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteClient(@PathVariable("id") UUID id){
+        String delete = this.clientService.deleteClient(id);
+        return ResponseEntity.ok(delete);
+    }
+
+    @DeleteMapping("/{name}")
+    public ResponseEntity<String> deleteBook(@PathVariable("name") String name){
+        String delete = this.clientService.deleteClient(name);
+        return ResponseEntity.ok(delete);
     }
 }

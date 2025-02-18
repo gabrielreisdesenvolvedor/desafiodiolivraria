@@ -4,10 +4,13 @@
  */
 package com.biblioteca.livraria.service;
 
+import com.biblioteca.livraria.dtos.BookDto;
 import com.biblioteca.livraria.dtos.ClientDto;
+import com.biblioteca.livraria.models.BookModel;
 import com.biblioteca.livraria.models.ClientModel;
 import com.biblioteca.livraria.repositories.ClientRepository;
 import java.util.Scanner;
+import java.util.UUID;
 
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -33,7 +36,7 @@ public class ClientService {
     Scanner scanner = new Scanner(System.in);
     
     @Transactional
-    public ClientDto addClient(ClientDto clientDto){
+    public ClientDto create(ClientDto clientDto){
 
         ClientModel model = new ClientModel(clientDto);
         var modelCreate = this.clientRepository.save(model);
@@ -46,10 +49,44 @@ public class ClientService {
 
         return new ClientDto(modelCreate);
     }
-    
+
+    @Transactional
     public Page<ClientDto> findAll(int page, int size, String sort ){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         Page<ClientModel> clientModel = this.clientRepository.findAll(pageable);
         return clientModel.map(ClientDto::new);
+    }
+
+    @Transactional
+    public ClientDto findById(UUID id){
+       ClientModel clientModel = this.clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client Not Found."));
+       return new ClientDto(clientModel);
+    }
+
+    @Transactional
+    public String updateClient(UUID id, ClientDto clientDto){
+        ClientModel clientModel = this.clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client Not Found."));
+        clientModel.setName(clientDto.getName());
+        clientModel.setEmail(clientDto.getEmail());
+        clientModel.setAddress(clientDto.getAddress());
+        clientModel.setAccountBalance(clientDto.getAccountBalance());
+
+        this.clientRepository.save(clientModel);
+
+        return "Client update with success";
+    }
+
+    @Transactional
+    public String deleteClient(UUID id){
+        ClientModel clientModel = this.clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client Not Found."));
+        this.clientRepository.deleteById(clientModel.getId());
+        return "Client delete with success.";
+    }
+
+    @Transactional
+    public String deleteClient(String name){
+        ClientModel clientModel = this.clientRepository.findByName(name).orElseThrow(() -> new RuntimeException("Client Not Found."));
+        this.clientRepository.deleteById(clientModel.getId());
+        return "Client delete with success.";
     }
 }

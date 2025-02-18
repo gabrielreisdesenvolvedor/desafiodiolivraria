@@ -5,6 +5,8 @@
 package com.biblioteca.livraria.repositories;
 
 import com.biblioteca.livraria.models.CategoryModel;
+
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -16,5 +18,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryModel, UUID>{
     
-    CategoryModel findByName(String nome);
+    Optional<CategoryModel> findByName(String nome);
 }

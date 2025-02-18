@@ -10,6 +10,7 @@ import com.biblioteca.livraria.models.BookModel;
 import com.biblioteca.livraria.repositories.CategoryRepository;
 import com.biblioteca.livraria.repositories.BookRepository;
 import java.util.Scanner;
+import java.util.UUID;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,4 +44,37 @@ public class BookService {
         return books.map(BookDto::new);
     }
 
+    @Transactional
+    public BookDto findById(UUID id){
+       BookModel bookModel = this.bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book Not Found."));
+       return new BookDto(bookModel);
+    }
+
+    @Transactional
+    public String updateBook(UUID id, BookDto bookDto){
+       BookModel bookModel = this.bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book Not Found."));
+       bookModel.setName(bookDto.getName());
+       bookModel.setAuthor(bookDto.getAuthor());
+       bookModel.setDescription(bookDto.getDescription());
+       bookModel.setCategory(bookDto.getCategory());
+       bookModel.setClient(bookDto.getClient());
+
+       this.bookRepository.save(bookModel);
+
+       return "Book update with success";
+    }
+
+    @Transactional
+    public String deleteCategory(UUID id){
+        BookModel bookModel = this.bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book Not Found."));
+        this.bookRepository.deleteById(bookModel.getId());
+        return "Book delete with success.";
+    }
+
+    @Transactional
+    public String deleteCategory(String name){
+        BookModel bookModel = this.bookRepository.findByName(name).orElseThrow(() -> new RuntimeException("Category Not Found."));
+        this.bookRepository.deleteById(bookModel.getId());
+        return "Book delete with success.";
+    }
 }
